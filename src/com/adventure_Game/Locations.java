@@ -1,5 +1,7 @@
 package com.adventure_Game;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +10,21 @@ import java.util.Set;
 public class Locations implements Map<Integer,Location> {
     private static Map<Integer,Location> locations = new HashMap<Integer,Location>();
 
-    static{
+    public static void main(String[] args) {
+        FileWriter locFile = null;
+        try{
+            locFile = new FileWriter("location.txt");
+            for(Location location : locations.values())
+                System.out.println(location.getLocationID()+", "+location.getDescription()+"\n");
+            locFile.close();
+        }catch(IOException e) {
+            System.out.println("In catch block");
+            e.printStackTrace();
+        }
+
+    }
+
+    static{//creating an instance
         Map<String, Integer>tempExit = new HashMap<>();
         locations.put(0, new Location(0, "You are sitting in front of a computer learning Java",tempExit));
 

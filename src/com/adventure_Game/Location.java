@@ -2,7 +2,7 @@ package com.adventure_Game;
 
 import java.util.HashMap;
 import java.util.Map;
-
+//Location is an immutable class
     final public class Location {
 
         private final int locationID;
