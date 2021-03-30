@@ -15,11 +15,20 @@ public class Locations implements Map<Integer,Location> {
         try{
             locFile = new FileWriter("location.txt");
             for(Location location : locations.values())
-                System.out.println(location.getLocationID()+", "+location.getDescription()+"\n");
-            locFile.close();
+                locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
         }catch(IOException e) {
             System.out.println("In catch block");
             e.printStackTrace();
+        }finally {
+            System.out.println("In finally block");
+            try {
+                if (locFile != null) {
+                    System.out.println("About to close file...");
+                    locFile.close();
+                }
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
