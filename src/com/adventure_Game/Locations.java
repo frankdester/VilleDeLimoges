@@ -10,26 +10,45 @@ import java.util.Set;
 public class Locations implements Map<Integer,Location> {
     private static Map<Integer,Location> locations = new HashMap<Integer,Location>();
 
-    public static void main(String[] args) {
-        FileWriter locFile = null;
-        try{
-            locFile = new FileWriter("location.txt");
+    public static void main(String[] args) throws IOException {
+        //no need of closing locFile using try like this
+        try(FileWriter locFile = new FileWriter("location.txt")){
             for(Location location : locations.values())
                 locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
-        }catch(IOException e) {
-            System.out.println("In catch block");
-            e.printStackTrace();
-        }finally {
-            System.out.println("In finally block");
-            try {
-                if (locFile != null) {
-                    System.out.println("About to close file...");
-                    locFile.close();
-                }
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
         }
+
+        //simplifying try catch by adding throwing IOException in run
+//        FileWriter locFile = null;
+//        try{
+//            locFile = new FileWriter("location.txt");
+//            for(Location location : locations.values())
+//                locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
+//        }finally {
+//            System.out.println("In finally block");
+//            if (locFile != null) {
+//                System.out.println("About to close file...");
+//                locFile.close();
+//            }
+//        }
+
+//        try{
+//            locFile = new FileWriter("location.txt");
+//            for(Location location : locations.values())
+//                locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
+//        }catch(IOException e) {
+//            System.out.println("In catch block");
+//            e.printStackTrace();
+//        }finally {
+//            System.out.println("In finally block");
+//            try {
+//                if (locFile != null) {
+//                    System.out.println("About to close file...");
+//                    locFile.close();
+//                }
+//            }catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
     }
 
