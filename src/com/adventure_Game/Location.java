@@ -33,6 +33,10 @@ import java.util.Map;
         public Map<String, Integer> getExits() {
             return new HashMap<String, Integer>(exits);
         }
+        //protected b/c class is immutable
+        protected void addExit(String direction, int location){
+            exits.put(direction,location);
+        }
     }
 
 

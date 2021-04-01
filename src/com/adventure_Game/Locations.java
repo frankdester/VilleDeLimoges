@@ -1,5 +1,6 @@
 package com.adventure_Game;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,13 +12,15 @@ public class Locations implements Map<Integer,Location> {
 
     public static void main(String[] args) throws IOException {
         //no need of closing locFile using try like this
-        try (FileWriter locFile = new FileWriter("location.txt")) {
-            for (Location location : locations.values()) {
-                locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
-                FileWriter exitFile = new FileWriter("exitFile.txt");
-                for(String exists : location.getExits().keySet())
-                    exitFile.write(location.getLocationID()+","+exists+","+location.getExits().get(exists));
+        try (FileWriter locFile = new FileWriter("location.txt");
+            FileWriter exitFile = new FileWriter("exitFile.txt")) {
+            for(Location location :locations.values()){
+                    locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
+                    for (String exists : location.getExits().keySet()) {
+                        exitFile.write(location.getLocationID() + "," + exists + "," + location.getExits().get(exists) + "\n");
+                    }
             }
+
         }
 
         //simplifying try catch by adding throwing IOException in run
@@ -74,6 +77,32 @@ public class Locations implements Map<Integer,Location> {
                 scanner.close();
         }
 
+        //implementing buffer
+        try{
+            scanner = new Scanner(new BufferedReader(new FileReader("exitFile.txt")));
+            //scanner.useDelimiter(",");
+            while(scanner.hasNextLine()){
+//                int id = scanner.nextInt();
+//                scanner.skip(scanner.delimiter());
+//                String direction = scanner.nextLine();
+//                scanner.skip(scanner.delimiter());
+//                String des = scanner.nextLine();
+//                int destination = Integer.parseInt(des);
+                String input = scanner.nextLine();
+                String[] data = input.split(",");
+                int id = Integer.parseInt(data[0]);
+                String direction = data[1];
+                int destination = Integer.parseInt(data[2]);
+                System.out.println(id+" : "+direction+" : "+destination);
+                Location location = locations.get(id);
+                location.addExit(direction,destination);
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally {
+            if(scanner != null)
+                scanner.close();
+        }
         //creating an instance
 //        Map<String, Integer> tempExit = new HashMap<>();
 //        locations.put(0, new Location(0, "You are sitting in front of a computer learning Java", tempExit));
