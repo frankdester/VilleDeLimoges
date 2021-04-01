@@ -56,11 +56,10 @@ public class Locations implements Map<Integer,Location> {
 //            }
 //        }
     }
-    static {
+    static{
         //creating reading file
-        Scanner scanner = null;
-        try{
-            scanner = new Scanner(new FileReader("locations_big.txt"));
+        //Scanner scanner = null;
+        try(Scanner scanner = new Scanner(new FileReader("locations_big.txt"))){
             scanner.useDelimiter(",");
             while(scanner.hasNextLine()){
                 int id =  scanner.nextInt();
@@ -72,23 +71,23 @@ public class Locations implements Map<Integer,Location> {
             }
         }catch (IOException e){
             e.printStackTrace();
-        }finally {
-            if(scanner != null)
-                scanner.close();
         }
+//        finally {
+//            if(scanner != null)
+//                scanner.close();
+//        }
 
         //implementing buffer
-        try{
-            scanner = new Scanner(new BufferedReader(new FileReader("directions_big.txt")));
+        try(BufferedReader bufFile = new BufferedReader(new FileReader("directions_big.txt"))){
+            String input = null;
             //scanner.useDelimiter(",");
-            while(scanner.hasNextLine()){
+            while((input = bufFile.readLine()) != null){
 //                int id = scanner.nextInt();
 //                scanner.skip(scanner.delimiter());
 //                String direction = scanner.nextLine();
 //                scanner.skip(scanner.delimiter());
 //                String des = scanner.nextLine();
 //                int destination = Integer.parseInt(des);
-                String input = scanner.nextLine();
                 String[] data = input.split(",");
                 int id = Integer.parseInt(data[0]);
                 String direction = data[1];
@@ -99,9 +98,6 @@ public class Locations implements Map<Integer,Location> {
             }
         }catch(IOException e){
             e.printStackTrace();
-        }finally {
-            if(scanner != null)
-                scanner.close();
         }
         //creating an instance
 //        Map<String, Integer> tempExit = new HashMap<>();
