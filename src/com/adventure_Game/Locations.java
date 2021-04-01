@@ -12,8 +12,8 @@ public class Locations implements Map<Integer,Location> {
 
     public static void main(String[] args) throws IOException {
         //no need of closing locFile using try like this
-        try (FileWriter locFile = new FileWriter("location.txt");
-            FileWriter exitFile = new FileWriter("exitFile.txt")) {
+        try (FileWriter locFile = new FileWriter("locations_big.txt");
+            FileWriter exitFile = new FileWriter("directions_big.txt")) {
             for(Location location :locations.values()){
                     locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
                     for (String exists : location.getExits().keySet()) {
@@ -60,7 +60,7 @@ public class Locations implements Map<Integer,Location> {
         //creating reading file
         Scanner scanner = null;
         try{
-            scanner = new Scanner(new FileReader("location.txt"));
+            scanner = new Scanner(new FileReader("locations_big.txt"));
             scanner.useDelimiter(",");
             while(scanner.hasNextLine()){
                 int id =  scanner.nextInt();
@@ -79,7 +79,7 @@ public class Locations implements Map<Integer,Location> {
 
         //implementing buffer
         try{
-            scanner = new Scanner(new BufferedReader(new FileReader("exitFile.txt")));
+            scanner = new Scanner(new BufferedReader(new FileReader("directions_big.txt")));
             //scanner.useDelimiter(",");
             while(scanner.hasNextLine()){
 //                int id = scanner.nextInt();
