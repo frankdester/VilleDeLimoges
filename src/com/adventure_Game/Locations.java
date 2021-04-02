@@ -59,7 +59,7 @@ public class Locations implements Map<Integer,Location> {
     static{
         //creating reading file
         //Scanner scanner = null;
-        try(Scanner scanner = new Scanner(new FileReader("locations_big.txt"))){
+        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("locations_big.txt")))){
             scanner.useDelimiter(",");
             while(scanner.hasNextLine()){
                 int id =  scanner.nextInt();
@@ -69,6 +69,7 @@ public class Locations implements Map<Integer,Location> {
                 Map<String,Integer> tempExit = new HashMap<>();
                 locations.put(id,new Location(id,description,tempExit));
             }
+
         }catch (IOException e){
             e.printStackTrace();
         }
