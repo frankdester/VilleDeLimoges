@@ -8,7 +8,7 @@ import java.util.*;
 
 /* class for input files*/
 public class Locations implements Map<Integer,Location> {
-    private static Map<Integer, Location> locations = new HashMap<Integer, Location>();
+    private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
         //no need of closing locFile using try like this

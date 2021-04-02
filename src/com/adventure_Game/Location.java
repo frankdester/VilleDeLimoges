@@ -1,6 +1,7 @@
 package com.adventure_Game;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 //Location is an immutable class
     final public class Location {
@@ -13,9 +14,9 @@ import java.util.Map;
             this.locationID = locationID;
             this.description = description;
             if(exits != null)
-                this.exits = new HashMap<>(exits);
+                this.exits = new LinkedHashMap<>(exits);
             else
-                this.exits = new HashMap<>();
+                this.exits = new LinkedHashMap<>();
             this.exits.put("Q", 0);
         }
 
@@ -31,7 +32,7 @@ import java.util.Map;
         }
 
         public Map<String, Integer> getExits() {
-            return new HashMap<String, Integer>(exits);
+            return new LinkedHashMap<String, Integer>(exits);
         }
         //protected b/c class is immutable
         protected void addExit(String direction, int location){
