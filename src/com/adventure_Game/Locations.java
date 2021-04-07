@@ -8,19 +8,35 @@ public class Locations implements Map<Integer,Location> {
     private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
-        //no need of closing locFile using try like this ; it's try with resources
-        try (BufferedWriter locFile = new BufferedWriter(new FileWriter("newlocations_big.txt"));
-             BufferedWriter exitFile = new BufferedWriter(new FileWriter("newdirections_big.txt"))){
-            for(Location location :locations.values()){
-                    locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
-                    for (String exists : location.getExits().keySet()) {
-                        if (!exists.equalsIgnoreCase("Q")){
-                            exitFile.write(location.getLocationID() + "," + exists + "," + location.getExits().get(exists) + "\n");
-                        }
+        //using binary data or byte stream and creating dat file
+        try(DataOutputStream data = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("location.dat")))){
+            for(Location location : locations.values()){
+                data.writeInt(location.getLocationID());
+                data.writeUTF(location.getDescription());
+                System.out.println(location.getLocationID()+" "+location.getDescription());
+                for(String exit : location.getExits().keySet()){
+                    if(!exit.equalsIgnoreCase("Q")) {
+                        data.writeUTF(exit);
+                        data.writeInt(location.getExits().get(exit));
+                        System.out.println(location.getLocationID() + " has " + exit + " : " + location.getExits().get(exit));
                     }
+                }
             }
-
         }
+
+        //no need of closing locFile using try like this ; it's try with resources
+//        try (BufferedWriter locFile = new BufferedWriter(new FileWriter("newlocations_big.txt"));
+//             BufferedWriter exitFile = new BufferedWriter(new FileWriter("newdirections_big.txt"))){
+//            for(Location location :locations.values()){
+//                    locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
+//                    for (String exists : location.getExits().keySet()) {
+//                        if (!exists.equalsIgnoreCase("Q")){
+//                            exitFile.write(location.getLocationID() + "," + exists + "," + location.getExits().get(exists) + "\n");
+//                        }
+//                    }
+//            }
+//
+//        }
 
         //simplifying try catch by adding throwing IOException in run
 //        FileWriter locFile = null;
