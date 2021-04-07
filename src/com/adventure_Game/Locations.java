@@ -8,13 +8,15 @@ public class Locations implements Map<Integer,Location> {
     private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
-        //no need of closing locFile using try like this
-        try (BufferedWriter locFile = new BufferedWriter(new FileWriter("locations_big.txt"));
-             BufferedWriter exitFile = new BufferedWriter(new FileWriter("directions_big.txt"))){
+        //no need of closing locFile using try like this ; it's try with resources
+        try (BufferedWriter locFile = new BufferedWriter(new FileWriter("newlocations_big.txt"));
+             BufferedWriter exitFile = new BufferedWriter(new FileWriter("newdirections_big.txt"))){
             for(Location location :locations.values()){
                     locFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
                     for (String exists : location.getExits().keySet()) {
-                        exitFile.write(location.getLocationID() + "," + exists + "," + location.getExits().get(exists) + "\n");
+                        if (!exists.equalsIgnoreCase("Q")){
+                            exitFile.write(location.getLocationID() + "," + exists + "," + location.getExits().get(exists) + "\n");
+                        }
                     }
             }
 
@@ -63,7 +65,7 @@ public class Locations implements Map<Integer,Location> {
                 scanner.skip(scanner.delimiter());
                 String description = scanner.nextLine();
                 System.out.println("new locations "+id+" :"+description);
-                Map<String,Integer> tempExit = new HashMap<>();
+                Map<String,Integer> tempExit = new LinkedHashMap<>();
                 locations.put(id,new Location(id,description,tempExit));
             }
 
