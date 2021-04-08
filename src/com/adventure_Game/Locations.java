@@ -8,12 +8,14 @@ public class Locations implements Map<Integer,Location> {
     private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
+        //IOException thrown for error of end of file like leakage of stream
         //using binary data or byte stream and creating dat file
         try(DataOutputStream data = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("location.dat")))){
             for(Location location : locations.values()){
                 data.writeInt(location.getLocationID());
                 data.writeUTF(location.getDescription());
-                System.out.println(location.getLocationID()+" "+location.getDescription());
+                data.writeInt(location.getExits().size()-1);
+                System.out.println(location.getLocationID()+" "+location.getDescription()+" - "+(location.getExits().size()-1));
                 for(String exit : location.getExits().keySet()){
                     if(!exit.equalsIgnoreCase("Q")) {
                         data.writeUTF(exit);
@@ -72,49 +74,74 @@ public class Locations implements Map<Integer,Location> {
 //        }
     }
     static{
-        //creating reading file
-        //Scanner scanner = null;
-        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("locations_big.txt")))){
-            scanner.useDelimiter(",");
-            while(scanner.hasNextLine()){
-                int id =  scanner.nextInt();
-                scanner.skip(scanner.delimiter());
-                String description = scanner.nextLine();
-                System.out.println("new locations "+id+" :"+description);
-                Map<String,Integer> tempExit = new LinkedHashMap<>();
-                locations.put(id,new Location(id,description,tempExit));
+       // binary reading
+        try(DataInputStream data = new DataInputStream(new BufferedInputStream(new FileInputStream("location.dat")))){
+            boolean eof = false;
+            while(!eof) {
+                try {
+                    Map<String, Integer> exists = new LinkedHashMap<>();
+                    int locID = data.readInt();
+                    String description = data.readUTF();
+                    int numExits = data.readInt();
+                    System.out.println(locID+" "+description+" "+numExits);
+                    for (int i = 0; i < numExits; i++) {
+                        String direction = data.readUTF();
+                        int destinations = data.readInt();
+                        exists.put(direction, destinations);
+                    }
+                    locations.put(locID, new Location(locID, description, exists));
+                }catch (EOFException e){
+                    eof = true;
+                }
             }
-
-        }catch (IOException e){
-            e.printStackTrace();
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("ioe exception");
         }
-//        finally {
-//            if(scanner != null)
-//                scanner.close();
+
+//        //creating reading file
+//        //Scanner scanner = null;
+//        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("locations_big.txt")))){
+//            scanner.useDelimiter(",");
+//            while(scanner.hasNextLine()){
+//                int id =  scanner.nextInt();
+//                scanner.skip(scanner.delimiter());
+//                String description = scanner.nextLine();
+//                System.out.println("new locations "+id+" :"+description);
+//                Map<String,Integer> tempExit = new LinkedHashMap<>();
+//                locations.put(id,new Location(id,description,tempExit));
+//            }
+//
+//        }catch (IOException e){
+//            e.printStackTrace();
 //        }
-
-        //implementing buffer
-        try(BufferedReader bufFile = new BufferedReader(new FileReader("directions_big.txt"))){
-            String input = null;
-            //scanner.useDelimiter(",");
-            while((input = bufFile.readLine()) != null){
-//                int id = scanner.nextInt();
-//                scanner.skip(scanner.delimiter());
-//                String direction = scanner.nextLine();
-//                scanner.skip(scanner.delimiter());
-//                String des = scanner.nextLine();
-//                int destination = Integer.parseInt(des);
-                String[] data = input.split(",");
-                int id = Integer.parseInt(data[0]);
-                String direction = data[1];
-                int destination = Integer.parseInt(data[2]);
-                System.out.println(id+" : "+direction+" : "+destination);
-                Location location = locations.get(id);
-                location.addExit(direction,destination);
-            }
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+////        finally {
+////            if(scanner != null)
+////                scanner.close();
+////        }
+//
+//        //implementing buffer
+//        try(BufferedReader bufFile = new BufferedReader(new FileReader("directions_big.txt"))){
+//            String input = null;
+//            //scanner.useDelimiter(",");
+//            while((input = bufFile.readLine()) != null){
+////                int id = scanner.nextInt();
+////                scanner.skip(scanner.delimiter());
+////                String direction = scanner.nextLine();
+////                scanner.skip(scanner.delimiter());
+////                String des = scanner.nextLine();
+////                int destination = Integer.parseInt(des);
+//                String[] data = input.split(",");
+//                int id = Integer.parseInt(data[0]);
+//                String direction = data[1];
+//                int destination = Integer.parseInt(data[2]);
+//                System.out.println(id+" : "+direction+" : "+destination);
+//                Location location = locations.get(id);
+//                location.addExit(direction,destination);
+//            }
+//        }catch(IOException e){
+//            e.printStackTrace();
+//        }
         //creating an instance
 //        Map<String, Integer> tempExit = new HashMap<>();
 //        locations.put(0, new Location(0, "You are sitting in front of a computer learning Java", tempExit));
