@@ -1,14 +1,16 @@
 package com.adventure_Game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 //Location is an immutable class
-    final public class Location {
+    final public class Location implements Serializable {
 
         private final int locationID;
         private final String description;
         private final Map<String, Integer> exits;
+        private final long serializable = 1L;
 
         public Location(int locationID, String description, Map<String, Integer> exits) {
             this.locationID = locationID;

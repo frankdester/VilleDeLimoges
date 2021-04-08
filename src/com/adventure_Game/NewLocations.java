@@ -7,47 +7,30 @@ public class NewLocations implements Map<Integer,Location> {
     private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
-        try (DataOutputStream data = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("location.dat")))) {
-            for (Location location : locations.values()) {
-                data.writeInt(location.getLocationID());
-                data.writeUTF(location.getDescription());
-                data.writeInt(location.getExits().size() - 1);
-                System.out.println(location.getLocationID() + " " + location.getDescription() + " - " + (location.getExits().size() - 1));
-                for (String exit : location.getExits().keySet()) {
-                    if (!exit.equalsIgnoreCase("Q")) {
-                        data.writeUTF(exit);
-                        data.writeInt(location.getExits().get(exit));
-                        System.out.println(location.getLocationID() + " has " + exit + " : " + location.getExits().get(exit));
-                    }
-                }
-            }
+
+        try(ObjectOutputStream data = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("location.dat")))){
+            for(Location location : locations.values())
+                data.writeObject(location);
         }
+
     }
     static {
-        //binary reading
-        try (DataInputStream data = new DataInputStream(new BufferedInputStream(new FileInputStream("location.dat")))) {
+        try(ObjectInputStream data = new ObjectInputStream(new BufferedInputStream(new FileInputStream("location.dat")))){
             boolean eof = false;
-            while (!eof) {
-                try {
-                    Map<String, Integer> exists = new LinkedHashMap<>();
-                    int locID = data.readInt();
-                    String description = data.readUTF();
-                    int numExits = data.readInt();
-                    System.out.println(locID + " " + description + " " + numExits);
-                    for (int i = 0; i < numExits; i++) {
-                        String direction = data.readUTF();
-                        int destinations = data.readInt();
-                        exists.put(direction, destinations);
-                    }
-                    locations.put(locID, new Location(locID, description, exists));
-                } catch (EOFException e) {
+            while(!eof){
+                try{
+                    Location location = (Location) data.readObject();
+                    System.out.println(location.getLocationID()+" "+location.getDescription());
+                    System.out.println(location.getExits().size());
+
+                    locations.put(location.getLocationID(),location);
+                } catch (EOFException  e) {
                     eof = true;
-                    System.out.println("eof exception");
+
                 }
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            System.out.println("ioe exception");
+        }catch (IOException | ClassNotFoundException e){
+            System.out.println(e.getMessage());
         }
     }
     @Override
