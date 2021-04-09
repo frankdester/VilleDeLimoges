@@ -5,7 +5,7 @@ import java.util.*;
 
 /* class for input files*/
 public class Locations implements Map<Integer,Location> {
-    private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
+    private static Map<Integer, Location> locations = new LinkedHashMap<>();
 
     public static void main(String[] args) throws IOException {
         try (ObjectOutputStream data = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("location.dat")))) {
