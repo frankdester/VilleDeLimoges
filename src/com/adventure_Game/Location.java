@@ -10,7 +10,8 @@ import java.util.Map;
         private final int locationID;
         private final String description;
         private final Map<String, Integer> exits;
-        private final long serializable = 1L;
+
+        private long serialVersionUID = 1L;
 
         public Location(int locationID, String description, Map<String, Integer> exits) {
             this.locationID = locationID;
