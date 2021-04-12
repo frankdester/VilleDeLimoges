@@ -28,7 +28,7 @@ public class Locations implements Map<Integer,Location> {
                         eof = true;
                     }
                 }
-            }catch (InvalidClassException in){
+            }catch (InvalidClassException in){//catching error in serial value difference. From compile class value to original given value
                 System.out.println("invalid class exception "+in.getMessage() );
             }catch (IOException io ){
                 System.out.println("io exception "+io.getMessage());
